@@ -1,6 +1,29 @@
 .viewport {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
+}
+
+.toolbox {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 40px;
+}
+
+.colors {
+  pointer-events: all;
+  width: 60px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  & > .color-picker {
+    margin-bottom: 14px;
+  }
 }

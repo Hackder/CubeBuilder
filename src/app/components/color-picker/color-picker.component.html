@@ -1,0 +1,21 @@
+<button
+  class="circle"
+  [style.background-color]="color"
+  (click)="pickerVisible = !pickerVisible"
+>
+  <img
+    *ngIf="isBlack; else white"
+    src="/assets/palette-black.svg"
+    alt="Color palette icon"
+  />
+  <ng-template #white>
+    <img src="/assets/palette-white.svg" alt="Color palette icon" />
+  </ng-template>
+</button>
+<color-chrome
+  class="picker"
+  [ngClass]="{ opened: pickerVisible }"
+  [color]="color"
+  [disableAlpha]="true"
+  (onChangeComplete)="change($event)"
+></color-chrome>

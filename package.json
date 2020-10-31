@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~10.1.5",
     "@angular/router": "~10.1.5",
     "@types/three": "^0.103.2",
+    "ngx-color": "^6.0.4",
     "rxjs": "~6.6.0",
     "three": "^0.122.0",
     "tslib": "^2.0.0",

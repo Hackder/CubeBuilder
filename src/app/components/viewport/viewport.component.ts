@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
+  Input,
 } from '@angular/core';
 import {
   Scene,
@@ -31,6 +32,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 export class ViewportComponent implements OnInit, AfterViewInit {
   @ViewChild('rendererContainer') rendererContainer: ElementRef<HTMLDivElement>;
 
+  @Input() color: string = '#39acdb';
   renderer = new WebGLRenderer({ antialias: true });
   scene: Scene = null;
   camera: PerspectiveCamera = null;
@@ -49,7 +51,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     const edges = new EdgesGeometry(edgeGeometry);
     const edgesMesh = new LineSegments(edges, edgesMaterial);
 
-    const material = new MeshBasicMaterial({ color: 0x39acdb });
+    const material = new MeshBasicMaterial({ color: this.color });
     const box = new Mesh(this.geometry, material);
     box.position.addVectors(position, new Vector3());
     box.name = 'box';
