@@ -4,5 +4,7 @@
   (window:mousemove)="windowMouseMove($event)"
   (window:click)="windowClick($event)"
   (window:contextmenu)="windowRightClick($event)"
+  (window:keydown)="windowKeyDown($event)"
+  (window:keyup)="windowKeyUp($event)"
 ></div>
 <app-label #label></app-label>

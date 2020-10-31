@@ -21,6 +21,7 @@ import {
   LineBasicMaterial,
   MeshBasicMaterial,
   BoxBufferGeometry,
+  Color,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { LabelComponent } from '../label/label.component';
@@ -39,6 +40,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
   scene: Scene = null;
   camera: PerspectiveCamera = null;
   orbitControls: OrbitControls;
+  orbitControlsStarted: boolean = false;
   geometry = new BoxGeometry(1, 1, 1);
   selection: LineSegments;
   raycaster = new Raycaster();
@@ -93,7 +95,11 @@ export class ViewportComponent implements OnInit, AfterViewInit {
       0.1,
       1000
     );
-    this.camera.position.z = 10;
+    // Default camera position and rotation
+    this.camera.position.z = 3;
+    this.camera.position.y = 2;
+    this.camera.position.x = 2;
+    this.camera.rotation.y = -30;
 
     this.addBox(new Vector3(0, 0, 0));
 
@@ -112,7 +118,8 @@ export class ViewportComponent implements OnInit, AfterViewInit {
       this.renderer.domElement
     );
 
-    this.orbitControls.screenSpacePanning = false;
+    this.orbitControls.screenSpacePanning = true;
+    this.orbitControls.enableKeys = false;
 
     this.orbitControls.minDistance = 2;
     this.orbitControls.maxDistance = 100;
@@ -122,6 +129,13 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     this.orbitControls.addEventListener('change', () => {
       this.selection.visible = false;
     });
+
+    this.orbitControls.addEventListener('start', () => {
+      this.orbitControlsStarted = true;
+    });
+    this.orbitControls.addEventListener('end', () => {
+      this.orbitControlsStarted = false;
+    });
   }
 
   windowResize() {
@@ -130,11 +144,34 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     this.camera.updateProjectionMatrix();
   }
 
+  windowKeyDown(event: KeyboardEvent) {
+    if (!this.orbitControls.enabled || this.orbitControlsStarted) return;
+
+    if (event.key === 'Shift') this.orbitControls.enabled = false;
+    this.selection.visible = false;
+  }
+
+  windowKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Shift') this.orbitControls.enabled = true;
+  }
+
+  handleRecolor(event: MouseEvent) {
+    this.selection.visible = false;
+    const closest = this.getClosest(this.getMousePos(event))?.object as Mesh;
+    if (!closest) return;
+
+    (closest.material as MeshBasicMaterial).color = new Color(this.color);
+  }
+
   windowMouseMove(event: MouseEvent) {
     event.preventDefault();
 
-    if (event.buttons === 1) {
-      this.selection.visible = false;
+    if (event.buttons === 1 && event.shiftKey) {
+      this.handleRecolor(event);
+      return;
+    }
+
+    if (event.buttons === 1 || event.shiftKey) {
       return;
     }
 
@@ -154,9 +191,15 @@ export class ViewportComponent implements OnInit, AfterViewInit {
 
   windowClick(event: MouseEvent) {
     event.preventDefault();
+
+    if (event.shiftKey) {
+      this.handleRecolor(event);
+    }
+
     if (!this.selection.visible) return;
 
     this.addBox(this.selection.position);
+    setTimeout(() => this.windowMouseMove(event), 0);
   }
 
   windowRightClick(event: MouseEvent) {
@@ -164,6 +207,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
 
     if (!this.selection.visible) return;
     const closest = this.getClosest(this.getMousePos(event));
+    if (!closest) return;
 
     // Do not remove base cube
     if (closest.object.position.length() === 0) {
@@ -175,6 +219,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
       return;
     }
     this.scene.remove(closest.object);
+    setTimeout(() => this.windowMouseMove(event), 0);
   }
 
   animate() {
