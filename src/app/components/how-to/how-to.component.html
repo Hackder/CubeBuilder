@@ -1,0 +1,12 @@
+<button class="how-to" (click)="opened = !opened">?</button>
+<div class="container" [ngClass]="{ opened: opened }">
+  <h1>How to?</h1>
+  <h2>Cubes</h2>
+  <p><strong>Left click</strong> - Place cube</p>
+  <p><strong>Right click</strong> - Delete cube</p>
+  <p><strong>Shift + Left click/drag</strong> - Recolor</p>
+  <h2>Movement</h2>
+  <p><strong>Left drag</strong> - Rotate</p>
+  <p><strong>Right drag</strong> - Pan</p>
+  <p><strong>Scroll wheel</strong> - Zoom</p>
+</div>

@@ -1,0 +1,47 @@
+.container {
+  position: absolute;
+  display: block;
+  top: 60px;
+  right: -500px;
+  background-color: #ffffff;
+  color: black;
+  padding: 0px 30px 20px 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px #cccccc;
+  text-align: left;
+  min-width: 300px;
+  transition: right 0.3s ease-in-out;
+  &.opened {
+    right: 0px;
+  }
+}
+
+.how-to {
+  position: relative;
+  pointer-events: all;
+  background-color: #333333;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+}
+
+h2 {
+  color: #666666;
+}
+
+p {
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+}

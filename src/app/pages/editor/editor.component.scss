@@ -10,20 +10,35 @@
 .toolbox {
   pointer-events: none;
   position: absolute;
+  overflow: hidden;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   padding: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  & > * {
+    position: relative;
+  }
 }
 
 .colors {
   pointer-events: all;
-  width: 60px;
   position: relative;
   display: flex;
   flex-direction: column;
   & > .color-picker {
     margin-bottom: 14px;
   }
+}
+
+.copyright {
+  pointer-events: all;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  color: #666666;
+  margin: 20px 40px;
 }
