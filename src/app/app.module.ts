@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { EditorComponent } from './pages/editor/editor.component';
 import { ViewportComponent } from './components/viewport/viewport.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { LabelComponent } from './components/label/label.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
     EditorComponent,
     ViewportComponent,
     ColorPickerComponent,
+    LabelComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,8 @@
+.label {
+  position: absolute;
+  border-radius: 20px;
+  padding: 5px 20px;
+  color: white;
+  pointer-events: none;
+  transition: opacity 0.15s ease-in-out;
+}

@@ -1,8 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap");
+
 html,
 body {
+  font-family: "Roboto";
   padding: 0;
   margin: 0;
   height: 100vh;
+  background-color: #e5e5e5;
 }
 
 canvas {

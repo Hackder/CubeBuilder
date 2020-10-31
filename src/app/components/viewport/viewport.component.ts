@@ -23,6 +23,7 @@ import {
   BoxBufferGeometry,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { LabelComponent } from '../label/label.component';
 
 @Component({
   selector: 'app-viewport',
@@ -31,6 +32,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 })
 export class ViewportComponent implements OnInit, AfterViewInit {
   @ViewChild('rendererContainer') rendererContainer: ElementRef<HTMLDivElement>;
+  @ViewChild('label') label: LabelComponent;
 
   @Input() color: string = '#39acdb';
   renderer = new WebGLRenderer({ antialias: true });
@@ -164,7 +166,14 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     const closest = this.getClosest(this.getMousePos(event));
 
     // Do not remove base cube
-    if (closest.object.position.length() === 0) return;
+    if (closest.object.position.length() === 0) {
+      this.label.show(
+        event.clientX,
+        event.clientY,
+        "You can't remove the center cube."
+      );
+      return;
+    }
     this.scene.remove(closest.object);
   }
 
