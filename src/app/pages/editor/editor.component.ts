@@ -22,6 +22,8 @@ export class EditorComponent implements OnInit {
     '#C23825',
   ];
 
+  isTrackball: boolean = false;
+
   constructor() {}
 
   ngOnInit(): void {}

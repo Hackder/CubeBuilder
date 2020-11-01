@@ -11,6 +11,7 @@ import { ViewportComponent } from './components/viewport/viewport.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { LabelComponent } from './components/label/label.component';
 import { HowToComponent } from './components/how-to/how-to.component';
+import { CircularCheckboxComponent } from './components/circular-checkbox/circular-checkbox.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { HowToComponent } from './components/how-to/how-to.component';
     ColorPickerComponent,
     LabelComponent,
     HowToComponent,
+    CircularCheckboxComponent,
   ],
   imports: [
     BrowserModule,

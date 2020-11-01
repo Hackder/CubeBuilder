@@ -1,0 +1,27 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid black;
+  outline: none;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+  &.checked {
+    background: black;
+    & > .content {
+      filter: invert(1) hue-rotate(180deg);
+    }
+  }
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

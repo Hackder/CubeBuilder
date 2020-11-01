@@ -24,6 +24,7 @@ import {
   Color,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { LabelComponent } from '../label/label.component';
 
 @Component({
@@ -36,11 +37,14 @@ export class ViewportComponent implements OnInit, AfterViewInit {
   @ViewChild('label') label: LabelComponent;
 
   @Input() color: string = '#39acdb';
+  @Input() isTrackball: boolean = false;
   renderer = new WebGLRenderer({ antialias: true });
   scene: Scene = null;
   camera: PerspectiveCamera = null;
   orbitControls: OrbitControls;
-  orbitControlsStarted: boolean = false;
+  trackballControls: TrackballControls;
+  currentControls: OrbitControls | TrackballControls;
+  ControlsStarted: boolean = false;
   geometry = new BoxGeometry(1, 1, 1);
   selection: LineSegments;
   raycaster = new Raycaster();
@@ -117,42 +121,62 @@ export class ViewportComponent implements OnInit, AfterViewInit {
       this.camera,
       this.renderer.domElement
     );
-
     this.orbitControls.screenSpacePanning = true;
     this.orbitControls.enableKeys = false;
-
     this.orbitControls.minDistance = 2;
     this.orbitControls.maxDistance = 100;
-
     this.orbitControls.maxPolarAngle = Math.PI;
 
     this.orbitControls.addEventListener('change', () => {
       this.selection.visible = false;
     });
-
     this.orbitControls.addEventListener('start', () => {
-      this.orbitControlsStarted = true;
+      this.ControlsStarted = true;
     });
     this.orbitControls.addEventListener('end', () => {
-      this.orbitControlsStarted = false;
+      this.ControlsStarted = false;
     });
+
+    this.trackballControls = new TrackballControls(
+      this.camera,
+      this.renderer.domElement
+    );
+    this.trackballControls.minDistance = 2;
+    this.trackballControls.maxDistance = 100;
+    this.trackballControls.rotateSpeed = 20;
+    this.trackballControls.panSpeed = 2;
+    this.trackballControls.staticMoving = true;
+    this.trackballControls.enabled = false;
+
+    this.trackballControls.addEventListener('change', () => {
+      this.selection.visible = false;
+    });
+    this.trackballControls.addEventListener('start', () => {
+      this.ControlsStarted = true;
+    });
+    this.trackballControls.addEventListener('end', () => {
+      this.ControlsStarted = false;
+    });
+
+    this.currentControls = this.orbitControls;
   }
 
   windowResize() {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
+    this.trackballControls.handleResize();
   }
 
   windowKeyDown(event: KeyboardEvent) {
-    if (!this.orbitControls.enabled || this.orbitControlsStarted) return;
+    if (!this.currentControls.enabled || this.ControlsStarted) return;
 
-    if (event.key === 'Shift') this.orbitControls.enabled = false;
+    if (event.key === 'Shift') this.currentControls.enabled = false;
     this.selection.visible = false;
   }
 
   windowKeyUp(event: KeyboardEvent) {
-    if (event.key === 'Shift') this.orbitControls.enabled = true;
+    if (event.key === 'Shift') this.currentControls.enabled = true;
   }
 
   handleRecolor(event: MouseEvent) {
@@ -230,8 +254,15 @@ export class ViewportComponent implements OnInit, AfterViewInit {
   }
 
   animate() {
+    this.currentControls = this.isTrackball
+      ? this.trackballControls
+      : this.orbitControls;
+    this.trackballControls.enabled = this.isTrackball;
+    this.orbitControls.enabled = !this.isTrackball;
+    if (!this.isTrackball) this.camera.up.set(0, 1, 0);
+
     window.requestAnimationFrame(() => this.animate());
-    this.orbitControls.update();
+    this.currentControls.update();
     this.renderer.render(this.scene, this.camera);
   }
 

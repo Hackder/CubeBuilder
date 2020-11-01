@@ -1,0 +1,9 @@
+<button
+  class="container"
+  [ngClass]="{ checked: checked }"
+  (click)="toggleChecked()"
+>
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+</button>

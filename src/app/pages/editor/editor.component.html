@@ -1,6 +1,10 @@
-<app-viewport class="viewport" [color]="color"></app-viewport>
+<app-viewport
+  class="viewport"
+  [color]="color"
+  [isTrackball]="isTrackball"
+></app-viewport>
 <div class="toolbox">
-  <div class="colors">
+  <div class="tools">
     <app-color-picker [(color)]="color" class="color-picker"></app-color-picker>
     <color-circle
       width="40"
@@ -9,6 +13,9 @@
       [color]="color"
       (onChangeComplete)="color = $event.color.hex"
     ></color-circle>
+    <app-circular-checkbox class="trackball-checkbox" [(checked)]="isTrackball">
+      <img src="./assets/3d_rotation-black.svg" />
+    </app-circular-checkbox>
   </div>
   <app-how-to></app-how-to>
 </div>
