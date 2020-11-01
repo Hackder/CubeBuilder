@@ -198,6 +198,13 @@ export class ViewportComponent implements OnInit, AfterViewInit {
 
     if (!this.selection.visible) return;
 
+    if (
+      this.scene.children
+        .filter((child) => child.name === 'box')
+        .some((object) => object.position.equals(this.selection.position))
+    )
+      return;
+
     this.addBox(this.selection.position);
     setTimeout(() => this.windowMouseMove(event), 0);
   }
