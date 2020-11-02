@@ -143,7 +143,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     );
     this.trackballControls.minDistance = 2;
     this.trackballControls.maxDistance = 100;
-    this.trackballControls.rotateSpeed = 20;
+    this.trackballControls.rotateSpeed = 8;
     this.trackballControls.panSpeed = 2;
     this.trackballControls.staticMoving = true;
     this.trackballControls.enabled = false;
