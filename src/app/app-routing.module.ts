@@ -5,7 +5,7 @@ import { EditorComponent } from './pages/editor/editor.component';
 const routes: Routes = [{ path: '', component: EditorComponent }];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
