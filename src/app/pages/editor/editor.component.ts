@@ -23,6 +23,7 @@ export class EditorComponent implements OnInit {
   ];
 
   isTrackball: boolean = false;
+  isPerspective: boolean = true;
 
   constructor() {}
 

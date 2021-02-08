@@ -2,6 +2,7 @@
   class="viewport"
   [color]="color"
   [isTrackball]="isTrackball"
+  [isPerspective]="isPerspective"
 ></app-viewport>
 <div class="toolbox">
   <div class="tools">
@@ -13,8 +14,17 @@
       [color]="color"
       (onChangeComplete)="color = $event.color.hex"
     ></color-circle>
-    <app-circular-checkbox class="trackball-checkbox" [(checked)]="isTrackball">
+    <app-circular-checkbox
+      class="circular-checkbox trackball-checkbox"
+      [(checked)]="isTrackball"
+    >
       <img src="./assets/3d_rotation-black.svg" />
+    </app-circular-checkbox>
+    <app-circular-checkbox
+      class="circular-checkbox"
+      [(checked)]="isPerspective"
+    >
+      <img src="./assets/perspective-24dp.svg" />
     </app-circular-checkbox>
   </div>
   <app-how-to></app-how-to>

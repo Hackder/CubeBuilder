@@ -22,6 +22,7 @@ import {
   MeshBasicMaterial,
   BoxBufferGeometry,
   Color,
+  OrthographicCamera,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
@@ -38,9 +39,21 @@ export class ViewportComponent implements OnInit, AfterViewInit {
 
   @Input() color: string = '#39acdb';
   @Input() isTrackball: boolean = false;
+  @Input()
+  set isPerspective(value: boolean) {
+    const target = this.setupCamera(value);
+    this.setupControls(target);
+    this._isPerspective = value;
+  }
+  get isPerspective(): boolean {
+    return this._isPerspective;
+  }
+
+  private _isPerspective: boolean = false;
+
   renderer = new WebGLRenderer({ antialias: true });
   scene: Scene = null;
-  camera: PerspectiveCamera = null;
+  camera: PerspectiveCamera | OrthographicCamera | null = null;
   orbitControls: OrbitControls;
   trackballControls: TrackballControls;
   currentControls: OrbitControls | TrackballControls;
@@ -48,6 +61,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
   geometry = new BoxGeometry(1, 1, 1);
   selection: LineSegments;
   raycaster = new Raycaster();
+  viewSize = 5;
 
   constructor() {}
 
@@ -90,15 +104,44 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     return closestIntersection;
   }
 
+  setupCamera(perspective: boolean): Vector3 {
+    const aspect = window.innerWidth / window.innerHeight;
+    let cam: PerspectiveCamera | OrthographicCamera;
+    if (perspective) {
+      cam = new PerspectiveCamera(75, aspect, 0.001, 1000);
+    } else {
+      cam = new OrthographicCamera(
+        (-aspect * this.viewSize) / 2,
+        (aspect * this.viewSize) / 2,
+        this.viewSize / 2,
+        -this.viewSize / 2,
+        0,
+        1000
+      );
+    }
+
+    if (this.camera !== null) {
+      cam.position.copy(this.camera.position);
+      cam.rotation.copy(this.camera.rotation);
+
+      this.camera = cam;
+
+      return new Vector3(
+        this.currentControls.target.x,
+        this.currentControls.target.y,
+        this.currentControls.target.z
+      );
+    }
+    this.camera = cam;
+
+    return new Vector3();
+  }
+
   ngOnInit(): void {
     this.renderer.setClearColor('#e5e5e5');
     this.scene = new Scene();
-    this.camera = new PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+
+    this.setupCamera(this.isPerspective);
     // Default camera position and rotation
     this.camera.position.z = 3;
     this.camera.position.y = 2;
@@ -116,7 +159,7 @@ export class ViewportComponent implements OnInit, AfterViewInit {
     this.scene.add(this.selection);
   }
 
-  setupControls() {
+  setupControls(target?: Vector3) {
     this.orbitControls = new OrbitControls(
       this.camera,
       this.renderer.domElement
@@ -158,13 +201,29 @@ export class ViewportComponent implements OnInit, AfterViewInit {
       this.ControlsStarted = false;
     });
 
-    this.currentControls = this.orbitControls;
+    if (this.isTrackball) {
+      this.currentControls = this.trackballControls;
+    } else {
+      this.currentControls = this.orbitControls;
+    }
+
+    if (target) {
+      this.currentControls.target = target;
+    }
   }
 
   windowResize() {
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    const aspect = window.innerWidth / window.innerHeight;
+    if (this.camera instanceof PerspectiveCamera) {
+      this.camera.aspect = aspect;
+    } else if (this.camera instanceof OrthographicCamera) {
+      this.camera.left = (-aspect * this.viewSize) / 2;
+      this.camera.right = (aspect * this.viewSize) / 2;
+      this.camera.top = this.viewSize / 2;
+      this.camera.bottom = -this.viewSize / 2;
+    }
     this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.trackballControls.handleResize();
   }
 
